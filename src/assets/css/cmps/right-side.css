@@ -1,0 +1,12 @@
+.right-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.right-side img {
+    padding: 5px;
+    width: 35px;
+    height: 35px;
+}

@@ -1,0 +1,23 @@
+tr {
+    -webkit-box-shadow: inset 0 -1px 0 0 #aaa;
+    border-collapse: collapse;
+    background: rgba(0, 0, 0, 0.051);
+    box-shadow: rgb(170, 170, 170) 0px -1px 0px 0px inset;
+}
+
+td {
+    padding: 10px 10px 10px 0;
+}
+
+td input,
+td img {
+    opacity: 0.32;
+}
+
+tr:hover * {
+    opacity: 1;
+}
+
+tr td:first-child {
+    padding-left: 18px;
+}
