@@ -15,6 +15,7 @@ body {
         "Droid Sans", "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: var(--bcgd-app)
 }
 
 img {
@@ -78,25 +79,24 @@ input {
     -webkit-border-radius: 100px;
 }
 
-.main-app {
+/* .main-app {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-}
+} */
 
 
-.main-app main {
+/* .main-app main {
     flex-grow: 1;
     width: 100%;
-}
+} */
 
-.main-app > footer {
+.main-app>footer {
     background-color: #111;
     color: white;
 }
 
 
 a.active {
-    color: rgb(84, 17, 147);
     font-weight: 600;
 }
