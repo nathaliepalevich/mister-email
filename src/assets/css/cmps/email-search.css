@@ -1,6 +1,8 @@
 .email-search {
     padding: 8px;
     flex-grow: 1;
+    left: 66px;
+    position: relative;
 }
 
 .email-search input {

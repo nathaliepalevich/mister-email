@@ -5,13 +5,3 @@
     border-radius: 16px;
     padding-top: 60px;
 }
-
-.action-bar {
-    display: flex;
-}
-
-.refresh {
-    background-image: url(https://ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/refresh_baseline_nv700_20dp.png);
-    height: 20px;
-    width: 20px;
-}

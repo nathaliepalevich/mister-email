@@ -8,8 +8,7 @@ import user from "../assets/imgs/user_icon.jpeg";
 import { EmailSearch } from './EmailSearch';
 import { Icon } from './Icon';
 
-export function AppHeader() {
-
+export function AppHeader({ filterBy, onSetFilter }) {
     const icons = [
         { src: questionUrl, alt: 'help' },
         { src: settings, alt: 'settings' },
@@ -22,7 +21,7 @@ export function AppHeader() {
             <section className="container">
                 <Icon iconData={{ src: menu, alt: 'menu' }} />
                 <img src={logoUrl} alt="logo_img" />
-                <EmailSearch />
+                <EmailSearch filterBy={filterBy} onSetFilter={onSetFilter} />
                 {icons.map((icon, index) => {
                     return <Icon iconData={icon} key={index} />
                 })}

@@ -5,8 +5,12 @@ tr {
     box-shadow: rgb(170, 170, 170) 0px -1px 0px 0px inset;
 }
 
+.bold {
+    font-weight: bold;
+}
+
 td {
-    padding: 10px 10px 10px 0;
+    padding: 10px 0px 10px 0px;
 }
 
 td input,
@@ -16,8 +20,33 @@ td img {
 
 tr:hover * {
     opacity: 1;
+    cursor: pointer;
 }
 
 tr td:first-child {
     padding-left: 18px;
+    width: 50px;
+}
+
+tr td:last-child {
+    width: 145px;
+}
+
+.display-none {
+    display: none;
+}
+
+.display-block {
+    display: block;
+}
+
+.text-preview {
+    width: 400px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.selected {
+    background-color: rgb(194, 219, 255);
 }

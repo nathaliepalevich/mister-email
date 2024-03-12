@@ -1,6 +1,7 @@
 .menu-icon {
     padding: 8px;
     margin: 2px;
+    cursor: pointer;
 }
 
 .user-image {

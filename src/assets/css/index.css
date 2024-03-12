@@ -18,3 +18,6 @@
 @import "./cmps/email-list.css";
 @import "./cmps/email-details.css";
 @import "./cmps/icon.css";
+@import "./cmps/prev-mail-action.css";
+@import "./cmps/email-compose.css";
+@import "./cmps/main-header.css";

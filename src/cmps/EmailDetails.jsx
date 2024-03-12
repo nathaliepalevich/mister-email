@@ -1,12 +1,34 @@
+import { useEffect, useState } from 'react';
 import { Icon } from './Icon';
-export function EmailDetails({ emailDetails }) {
+import { useNavigate, useParams } from 'react-router';
+import { emailService } from '../services/email.service';
+import { Link } from 'react-router-dom';
+export function EmailDetails({ onBackBtnClick }) {
+    const [email, setEmail] = useState(null)
+    const params = useParams()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        loadEmail()
+    }, [])
+
+    async function loadEmail() {
+        try {
+            const email = await emailService.getById(params.emailId)
+            setEmail(email)
+        } catch (err) {
+            console.error(`Error in load email: ${err}`)
+            navigate('/inbox')
+        }
+    }
+    if (!email) return <div>Loading...</div>
     return (
-        <div className='email-details'>
-            <div>
+        <div div className='email-details' >
+            <Link onClick={onBackBtnClick} to='/inbox'>
                 <Icon iconData={{ src: 'https://ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/arrow_back_baseline_nv700_20dp.png' }} />
-            </div>
+            </Link>
             <div className='email-details-header flex space-between align-center'>
-                <h2 className='email-details-header-title'>{emailDetails.subject}</h2>
+                <h2 className='email-details-header-title'>{email.subject}</h2>
             </div>
             <div className='email-details-body'>
                 <div className='img-container'>
@@ -14,12 +36,12 @@ export function EmailDetails({ emailDetails }) {
                 </div>
                 <main>
                     <div className='mail-info'>
-                        <p>{emailDetails.from}</p>
-                        <p className='email-details-header-date'>{emailDetails.sentAt}</p>
+                        <p>{email.from}</p>
+                        <p className='email-details-header-date'>{email.sentAt}</p>
                     </div>
-                    <p>{emailDetails.body}</p>
+                    <p>{email.body}</p>
                 </main>
             </div>
-        </div>
+        </div >
     )
 }

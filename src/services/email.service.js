@@ -2,40 +2,42 @@ import { storageService } from './async-storage.service.js'
 import { utilService } from './util.service.js'
 
 const loggedinUser = {
-    email: 'user@appsus.com',
+    email: 'nathaliepalevich@gmail.com',
     fullname: 'Mahatma Appsus'
 }
 
-let orgEmails = []
 export const emailService = {
     query,
     save,
     remove,
     getById,
     createEmail,
-    filterBy
+    filterBy,
+    getDefaultFilter
 }
 
 const STORAGE_KEY = 'EMAILS'
 
 _createEmails()
 
-async function query(filterBy) {
-    const emails = await storageService.query(STORAGE_KEY)
-    orgEmails = JSON.parse(JSON.stringify(emails))
-    if (filterBy) {
-        var { type, maxBatteryStatus, minBatteryStatus, model } = filterBy
-        maxBatteryStatus = maxBatteryStatus || Infinity
-        minBatteryStatus = minBatteryStatus || 0
-        emails = emails.filter(email => email.type.toLowerCase().includes(type.toLowerCase()) && email.model.toLowerCase().includes(model.toLowerCase())
-            && (email.batteryStatus < maxBatteryStatus)
-            && email.batteryStatus > minBatteryStatus)
+async function query(query) {
+    let emails = await storageService.query(STORAGE_KEY)
+    if (query) {
+        let { searchStr, mail, status } = query
+        mail = mail || ''
+        searchStr = searchStr || ''
+        status = status || ''
+        emails = filterBy(emails, mail, status)
+        emails = emails?.filter(email => email.subject.toLowerCase().includes(searchStr.toLowerCase()))
     }
     return emails
 }
 
-function getById(id) {
-    return storageService.get(STORAGE_KEY, id)
+async function getById(id) {
+    const email = await storageService.get(STORAGE_KEY, id)
+    email.isRead = true
+    save(email)
+    return email
 }
 
 function remove(id) {
@@ -51,7 +53,7 @@ function save(emailToSave) {
     }
 }
 
-function createEmail(subject = '', body = '', isRead = false, isStarred = false, sentAt = 0, removedAt = null, from = '', to = '') {
+function createEmail(subject = '', body = '', isRead = false, isStarred = false, sentAt = 0, removedAt = null, from = 'nathaliepalevich@gmail.com', to = '') {
     return {
         subject,
         body,
@@ -77,7 +79,7 @@ function _createEmails() {
                 sentAt: 1551133930594,
                 removedAt: null,
                 from: 'momo@momo.com',
-                to: 'user@appsus.com'
+                to: 'nathaliepalevich@gmail.com'
             },
             {
                 id: 'e102',
@@ -88,17 +90,17 @@ function _createEmails() {
                 sentAt: 1645762800000, // February 24, 2022 12:00:00 UTC
                 removedAt: null,
                 from: 'reports@company.com',
-                to: 'user@appsus.com'
+                to: 'nathaliepalevich@gmail.com'
             },
             {
                 id: 'e103',
                 subject: 'Invitation to Webinar',
                 body: 'You are invited to attend our upcoming webinar on the latest industry trends.',
-                isRead: false,
+                isRead: true,
                 isStarred: false,
                 sentAt: 1645686400000, // February 23, 2022 12:00:00 UTC
                 removedAt: null,
-                from: 'user@appsus.com',
+                from: 'nathaliepalevich@gmail.com',
                 to: 'subscribers@company.com'
             },
             {
@@ -109,7 +111,7 @@ function _createEmails() {
                 isStarred: false,
                 sentAt: 1645616400000, // February 22, 2022 12:00:00 UTC
                 removedAt: null,
-                from: 'user@appsus.com',
+                from: 'nathaliepalevich@gmail.com',
                 to: 'applicant@company.com'
             },
             {
@@ -121,7 +123,7 @@ function _createEmails() {
                 sentAt: 1645530000000, // February 21, 2022 12:00:00 UTC
                 removedAt: null,
                 from: 'billing@company.com',
-                to: 'user@appsus.com'
+                to: 'nathaliepalevich@gmail.com'
             },
             {
                 id: 'e106',
@@ -132,7 +134,7 @@ function _createEmails() {
                 sentAt: 1645443600000, // February 20, 2022 12:00:00 UTC
                 removedAt: null,
                 from: 'project@company.com',
-                to: 'user@appsus.com'
+                to: 'nathaliepalevich@gmail.com'
             },
             {
                 id: 'e107',
@@ -143,7 +145,7 @@ function _createEmails() {
                 sentAt: 1645357200000, // February 19, 2022 12:00:00 UTC
                 removedAt: null,
                 from: 'manager@company.com',
-                to: 'user@appsus.com'
+                to: 'nathaliepalevich@gmail.com'
             },
             {
                 id: 'e108',
@@ -154,17 +156,17 @@ function _createEmails() {
                 sentAt: 1645270800000, // February 18, 2022 12:00:00 UTC
                 removedAt: null,
                 from: 'marketing@company.com',
-                to: 'user@appsus.com'
+                to: 'nathaliepalevich@gmail.com'
             },
             {
                 id: 'e109',
                 subject: 'Reminder: Team Meeting Tomorrow',
                 body: 'Just a friendly reminder about our team meeting scheduled for tomorrow.',
-                isRead: false,
+                isRead: true,
                 isStarred: false,
                 sentAt: 1645184400000, // February 17, 2022 12:00:00 UTC
                 removedAt: null,
-                from: 'user@appsus.com',
+                from: 'nathaliepalevich@gmail.com',
                 to: 'team@company.com'
             },
             {
@@ -175,7 +177,7 @@ function _createEmails() {
                 isStarred: false,
                 sentAt: 1645098000000, // February 16, 2022 12:00:00 UTC
                 removedAt: null,
-                from: 'user@appsus.com',
+                from: 'nathaliepalevich@gmail.com',
                 to: 'employee@company.com'
             }
         ]
@@ -183,21 +185,37 @@ function _createEmails() {
     }
 }
 
+function getDefaultFilter(route) {
+    route = route.includes('/') ? route.substring(1) : route
+    return {
+        searchStr: '',
+        mail: route
+    }
+}
 
-
-function filterBy(by) {
+function filterBy(emails, by, status) {
+    let filterByStatus
+    switch (status) {
+        case 'read':
+            filterByStatus = emails.filter(email => email.isRead)
+            break;
+        case 'unread':
+            filterByStatus = emails.filter(email => !email.isRead)
+            break
+        default:
+            filterByStatus = emails
+    }
     switch (by) {
         case 'inbox':
-            return orgEmails.filter(email => email.to === loggedinUser.email)
+            return filterByStatus.filter(email => email.to === loggedinUser.email)
         case 'sent':
-            return orgEmails.filter(email => email.from === loggedinUser.email)
+            return filterByStatus.filter(email => email.from === loggedinUser.email)
         case 'starred':
-            return orgEmails.filter(email => email.isStarred)
+            return filterByStatus.filter(email => email.isStarred)
         case 'drafts':
-            return orgEmails.filter(email => !email.sentAt)
+            return filterByStatus.filter(email => !email.sentAt)
         case 'trash':
-            return orgEmails.filter(email => email.removedAt)
-
+            return filterByStatus.filter(email => email.removedAt)
     }
 }
 
